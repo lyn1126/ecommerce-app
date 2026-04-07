@@ -15,9 +15,9 @@ export function SiteHeader({ adminHref = "/admin/products" }: SiteHeaderProps) {
         <div className="flex items-center gap-6">
           <Link href="/" className="flex flex-col">
             <span className="text-[0.7rem] font-medium uppercase tracking-[0.35em] text-muted-foreground">
-              Maison Nha
+              LYN Fashion
             </span>
-            <span className="text-lg font-semibold tracking-[0.12em]">Fashion House</span>
+            <span className="text-lg font-semibold tracking-[0.12em]">Womenswear Store</span>
           </Link>
 
           <nav className="hidden items-center gap-2 md:flex">

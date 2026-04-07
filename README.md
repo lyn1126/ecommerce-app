@@ -1,4 +1,4 @@
-# Maison Nha
+# LYN Fashion
 
 Fashion e-commerce demo built with Next.js App Router, Prisma, PostgreSQL, Stripe, Resend, Zustand, and shadcn/ui.
 
@@ -23,6 +23,7 @@ Fashion e-commerce demo built with Next.js App Router, Prisma, PostgreSQL, Strip
   - sort order
 - Product detail page with:
   - image
+  - original price display
   - SEO metadata
   - static params generation
 - Cart with local persistence via Zustand
@@ -39,18 +40,18 @@ Fashion e-commerce demo built with Next.js App Router, Prisma, PostgreSQL, Strip
 
 ```text
 src/
-├── app/
-│   ├── (store)/
-│   ├── (admin)/
-│   └── api/
-├── actions/
-├── components/
-│   ├── admin/
-│   ├── site/
-│   ├── store/
-│   └── ui/
-├── lib/
-└── store/
+|- app/
+|  |- (store)/
+|  |- (admin)/
+|  \- api/
+|- actions/
+|- components/
+|  |- admin/
+|  |- site/
+|  |- store/
+|  \- ui/
+|- lib/
+\- store/
 prisma/
 scripts/
 ```
@@ -128,7 +129,7 @@ npm run fix:vi-data
 Implemented and verified:
 
 - `npm run lint` passes
-- `npm run build` passes
+- `npx tsc --noEmit` passes
 - storefront, admin, cart, checkout success, and order tracking routes are in place
 - shadcn/ui has been installed and applied across the main UI surfaces
 

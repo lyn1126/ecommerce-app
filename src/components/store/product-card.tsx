@@ -12,6 +12,7 @@ type ProductCardProps = {
     name: string;
     description: string;
     price: number;
+    originalPrice?: number | null;
     stock: number;
     images: string[];
     featured?: boolean;
@@ -60,6 +61,11 @@ export function ProductCard({ product }: ProductCardProps) {
       <CardContent className="flex items-end justify-between gap-4 pb-5">
         <div className="flex flex-col gap-1">
           <p className="text-lg font-semibold">{product.price.toLocaleString("vi-VN")} VND</p>
+          {product.originalPrice ? (
+            <p className="text-sm text-muted-foreground/70 line-through">
+              {product.originalPrice.toLocaleString("vi-VN")} VND
+            </p>
+          ) : null}
           <p className="text-sm text-muted-foreground">
             {product.stock > 0 ? `Còn ${product.stock} sản phẩm` : "Hết hàng"}
           </p>
@@ -72,6 +78,7 @@ export function ProductCard({ product }: ProductCardProps) {
             slug: product.slug,
             name: product.name,
             price: product.price,
+            originalPrice: product.originalPrice,
             image: product.images[0],
             stock: product.stock,
           }}

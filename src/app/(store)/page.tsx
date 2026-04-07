@@ -2,8 +2,8 @@ import Link from "next/link";
 import { ArrowRightIcon } from "lucide-react";
 
 import { ProductCard } from "@/components/store/product-card";
-import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { prisma } from "@/lib/prisma";
 import { cn } from "@/lib/utils";
@@ -72,8 +72,8 @@ export default async function StoreHomePage() {
           </div>
 
           <p className="max-w-sm text-sm leading-6 text-primary-foreground/75">
-            Giao diện mới theo tinh thần fashion: tối giản, editorial, đậm tính trưng bày sản phẩm nhưng vẫn
-            giữ luồng mua hàng và quản trị mạch lạc.
+            Giao diện mới theo tinh thần fashion: tối giản, editorial, đậm tính trưng bày sản phẩm nhưng
+            vẫn giữ luồng mua hàng và quản trị mạch lạc.
           </p>
         </div>
       </section>
@@ -96,6 +96,7 @@ export default async function StoreHomePage() {
               product={{
                 ...product,
                 price: Number(product.price),
+                originalPrice: product.originalPrice ? Number(product.originalPrice) : null,
               }}
             />
           ))}

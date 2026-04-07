@@ -11,7 +11,7 @@ const beVietnamPro = Be_Vietnam_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "Maison Nha | Fashion E-commerce",
+  title: "LYN Fashion | Fashion E-commerce",
   description: "Cửa hàng thời trang nữ với trải nghiệm mua sắm và quản trị đồng bộ trên Next.js.",
 };
 

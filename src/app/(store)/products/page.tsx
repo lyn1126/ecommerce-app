@@ -134,6 +134,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             product={{
               ...product,
               price: Number(product.price),
+              originalPrice: product.originalPrice ? Number(product.originalPrice) : null,
             }}
           />
         ))}

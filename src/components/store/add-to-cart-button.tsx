@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useCartStore } from "@/store/cart-store";
+import { ensureCartHydrated, useCartStore } from "@/store/cart-store";
 
 type AddToCartButtonProps = {
   product: {
@@ -13,6 +13,7 @@ type AddToCartButtonProps = {
     slug: string;
     name: string;
     price: number;
+    originalPrice?: number | null;
     image?: string;
     stock: number;
   };
@@ -21,7 +22,23 @@ type AddToCartButtonProps = {
 
 export function AddToCartButton({ product, iconOnly = false }: AddToCartButtonProps) {
   const addItem = useCartStore((state) => state.addItem);
+  const hasHydrated = useCartStore((state) => state.hasHydrated);
   const [justAdded, setJustAdded] = useState(false);
+  const [isPreparing, setIsPreparing] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    void ensureCartHydrated().finally(() => {
+      if (isMounted) {
+        setIsPreparing(false);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!justAdded) return;
@@ -29,17 +46,26 @@ export function AddToCartButton({ product, iconOnly = false }: AddToCartButtonPr
     return () => window.clearTimeout(timeout);
   }, [justAdded]);
 
-  function handleAddToCart() {
+  async function handleAddToCart() {
+    if (!hasHydrated) {
+      setIsPreparing(true);
+      await ensureCartHydrated();
+      setIsPreparing(false);
+    }
+
     addItem({
       productId: product.id,
       slug: product.slug,
       name: product.name,
       price: product.price,
+      originalPrice: product.originalPrice,
       image: product.image,
       stock: product.stock,
     });
     setJustAdded(true);
   }
+
+  const isDisabled = product.stock <= 0 || isPreparing;
 
   if (iconOnly) {
     return (
@@ -48,8 +74,8 @@ export function AddToCartButton({ product, iconOnly = false }: AddToCartButtonPr
         size="icon"
         variant={product.stock > 0 ? "default" : "outline"}
         className="rounded-full"
-        disabled={product.stock <= 0}
-        onClick={handleAddToCart}
+        disabled={isDisabled}
+        onClick={() => void handleAddToCart()}
         aria-label={product.stock > 0 ? "Mua ngay" : "Hết hàng"}
         title={product.stock > 0 ? "Mua ngay" : "Hết hàng"}
       >
@@ -64,10 +90,16 @@ export function AddToCartButton({ product, iconOnly = false }: AddToCartButtonPr
       size="lg"
       variant={product.stock > 0 ? "default" : "outline"}
       className="w-full"
-      disabled={product.stock <= 0}
-      onClick={handleAddToCart}
+      disabled={isDisabled}
+      onClick={() => void handleAddToCart()}
     >
-      {product.stock > 0 ? (justAdded ? "Đã thêm vào giỏ" : "Thêm vào giỏ") : "Hết hàng"}
+      {product.stock > 0
+        ? isPreparing
+          ? "Đang tải giỏ hàng..."
+          : justAdded
+            ? "Đã thêm vào giỏ"
+            : "Thêm vào giỏ"
+        : "Hết hàng"}
     </Button>
   );
 }

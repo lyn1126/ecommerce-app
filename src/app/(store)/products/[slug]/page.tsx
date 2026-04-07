@@ -65,7 +65,10 @@ export default async function ProductDetailPage({ params }: PageProps) {
     <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 md:py-12">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-3">
-          <Badge variant="outline">{product.category.name}</Badge>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="outline">{product.category.name}</Badge>
+            {product.stock === 0 ? <Badge variant="destructive">Hết hàng</Badge> : null}
+          </div>
           <h1 className="max-w-3xl text-4xl font-semibold md:text-5xl">{product.name}</h1>
         </div>
         <Link href="/products" className={cn(buttonVariants({ variant: "outline" }))}>
@@ -97,7 +100,14 @@ export default async function ProductDetailPage({ params }: PageProps) {
           <CardContent className="flex flex-col gap-6 pt-6">
             <div className="flex flex-col gap-3">
               <p className="text-sm leading-7 text-muted-foreground">{product.description}</p>
-              <p className="text-3xl font-semibold">{Number(product.price).toLocaleString("vi-VN")} VND</p>
+              <div className="flex flex-wrap items-end gap-4">
+                <p className="text-3xl font-semibold">{Number(product.price).toLocaleString("vi-VN")} VND</p>
+                {product.originalPrice ? (
+                  <p className="pb-1 text-base font-medium text-muted-foreground/70 line-through">
+                    {Number(product.originalPrice).toLocaleString("vi-VN")} VND
+                  </p>
+                ) : null}
+              </div>
             </div>
 
             <Separator />
@@ -123,6 +133,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 slug: product.slug,
                 name: product.name,
                 price: Number(product.price),
+                originalPrice: product.originalPrice ? Number(product.originalPrice) : null,
                 image: product.images[0],
                 stock: product.stock,
               }}

@@ -59,19 +59,27 @@ export default async function EditProductPage({ params }: PageProps) {
             <Textarea name="description" defaultValue={product.description} className="min-h-32" required />
             <div className="grid gap-4 md:grid-cols-2">
               <Input type="number" name="price" defaultValue={Number(product.price)} required />
-              <Input type="number" name="stock" defaultValue={product.stock} required />
+              <Input
+                type="number"
+                name="originalPrice"
+                defaultValue={product.originalPrice ? Number(product.originalPrice) : ""}
+                placeholder="Giá gốc (tùy chọn)"
+              />
             </div>
-            <select
-              name="categoryId"
-              defaultValue={product.categoryId}
-              className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm"
-            >
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Input type="number" name="stock" defaultValue={product.stock} required />
+              <select
+                name="categoryId"
+                defaultValue={product.categoryId}
+                className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm"
+              >
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
             <Input name="images" defaultValue={product.images[0] ?? ""} required />
             <label className="flex items-center gap-2 text-sm">
               <input

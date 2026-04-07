@@ -29,6 +29,7 @@ function parseProductFormData(formData: FormData) {
     slug: normalizedSlug,
     description: String(formData.get("description") ?? ""),
     price: Number(formData.get("price") ?? 0),
+    originalPrice: String(formData.get("originalPrice") ?? "").trim(),
     stock: Number(formData.get("stock") ?? 0),
     images: rawImages.filter(Boolean),
     featured: String(formData.get("featured") ?? "") === "true",

@@ -8,12 +8,14 @@ export type CartItem = {
   slug: string;
   name: string;
   price: number;
+  originalPrice?: number | null;
   image?: string;
   quantity: number;
   stock: number;
 };
 
 type CartState = {
+  hasHydrated: boolean;
   items: CartItem[];
   addItem: (item: Omit<CartItem, "quantity">) => void;
   removeItem: (productId: string) => void;
@@ -22,9 +24,12 @@ type CartState = {
   total: () => number;
 };
 
+let cartHydrationPromise: Promise<void> | null = null;
+
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
+      hasHydrated: false,
       items: [],
       addItem: (item) =>
         set((state) => {
@@ -65,7 +70,25 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: "cart-storage",
+      skipHydration: true,
       storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: () => () => {
+        useCartStore.setState({ hasHydrated: true });
+      },
     },
   ),
 );
+
+export function ensureCartHydrated() {
+  if (useCartStore.persist.hasHydrated()) {
+    return Promise.resolve();
+  }
+
+  if (!cartHydrationPromise) {
+    cartHydrationPromise = Promise.resolve(useCartStore.persist.rehydrate()).then(() => {
+      cartHydrationPromise = null;
+    });
+  }
+
+  return cartHydrationPromise;
+}

@@ -1,20 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { useCartStore } from "@/store/cart-store";
+import { ensureCartHydrated, useCartStore } from "@/store/cart-store";
 
 export function CartClient() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    void ensureCartHydrated();
+  }, []);
+
+  const hasHydrated = useCartStore((state) => state.hasHydrated);
   const items = useCartStore((state) => state.items);
   const removeItem = useCartStore((state) => state.removeItem);
   const updateQty = useCartStore((state) => state.updateQty);
@@ -56,6 +62,17 @@ export function CartClient() {
     }
   }
 
+  if (!hasHydrated) {
+    return (
+      <Card className="border-border/60 bg-card/80">
+        <CardHeader>
+          <CardTitle>Đang tải giỏ hàng</CardTitle>
+          <CardDescription>Dữ liệu trong giỏ đang được đồng bộ từ trình duyệt.</CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
   if (items.length === 0) {
     return (
       <Card className="border-border/60 bg-card/80">
@@ -81,7 +98,14 @@ export function CartClient() {
               <div className="flex flex-col gap-1">
                 <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">{item.slug}</p>
                 <h3 className="text-lg font-medium">{item.name}</h3>
-                <p className="text-sm text-muted-foreground">{item.price.toLocaleString("vi-VN")} VND</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-sm text-muted-foreground">{item.price.toLocaleString("vi-VN")} VND</p>
+                  {item.originalPrice ? (
+                    <p className="text-xs text-muted-foreground/70 line-through">
+                      {item.originalPrice.toLocaleString("vi-VN")} VND
+                    </p>
+                  ) : null}
+                </div>
               </div>
 
               <div className="flex items-center gap-3">

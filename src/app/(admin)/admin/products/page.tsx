@@ -62,7 +62,8 @@ export default async function AdminProductsPage() {
           <form action={createProductAction} className="grid gap-4 md:grid-cols-2">
             <Input name="name" placeholder="Tên sản phẩm" required />
             <Input name="slug" placeholder="Slug (vd: ao-so-mi-nu)" />
-            <Input name="price" type="number" min="1" step="1" placeholder="Giá" required />
+            <Input name="price" type="number" min="1" step="1" placeholder="Giá bán" required />
+            <Input name="originalPrice" type="number" min="1" step="1" placeholder="Giá gốc (tùy chọn)" />
             <Input name="stock" type="number" min="0" step="1" placeholder="Tồn kho" required />
             <select
               name="categoryId"
@@ -105,7 +106,8 @@ export default async function AdminProductsPage() {
               <TableRow>
                 <TableHead>Tên</TableHead>
                 <TableHead>Danh mục</TableHead>
-                <TableHead>Giá</TableHead>
+                <TableHead>Giá bán</TableHead>
+                <TableHead>Giá gốc</TableHead>
                 <TableHead>Tồn kho</TableHead>
                 <TableHead>Nổi bật</TableHead>
                 <TableHead>Thao tác</TableHead>
@@ -117,6 +119,9 @@ export default async function AdminProductsPage() {
                   <TableCell className="font-medium">{product.name}</TableCell>
                   <TableCell>{product.category.name}</TableCell>
                   <TableCell>{Number(product.price).toLocaleString("vi-VN")} VND</TableCell>
+                  <TableCell>
+                    {product.originalPrice ? `${Number(product.originalPrice).toLocaleString("vi-VN")} VND` : "—"}
+                  </TableCell>
                   <TableCell>{product.stock}</TableCell>
                   <TableCell>
                     <Badge variant={product.featured ? "default" : "outline"}>
